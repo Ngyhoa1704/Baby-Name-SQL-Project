@@ -1,50 +1,63 @@
-# 👶 Baby Name Trend Analysis with SQL
+# 👶 Baby Names SQL Project
 
 ## 📌 Project Overview
-This SQL project explores naming trends in the United States using a simulated `baby_names_db` dataset. The goal is to analyze how the popularity of baby names has evolved over time, highlight the most popular names by gender and year, and identify naming trends across regions.
+This SQL project explores trends in baby name popularity across the United States using the `baby_names_db` database. The analysis covers temporal patterns, regional differences, gender-neutral names, and naming extremes. It uses advanced SQL features such as window functions, CTEs, and joins to uncover insights in naming behavior from 1980 to 2009.
 
-## 🎯 Objectives
-- Track changes in name popularity over time
-- Identify names that have experienced significant popularity shifts
-- Analyze regional differences in name preferences
-- Detect unisex names and their relative popularity across genders
+---
 
-## 🛠️ Tools & Technologies
-- SQL (MySQL syntax)
-- Window functions (`ROW_NUMBER`, `RANK`)
-- CTEs (Common Table Expressions)
-- Aggregations and grouping
-- Conditional logic and string matching
+## 🗃️ Database Structure
 
-## 🧩 Database Tables Used
-- `names`: Contains baby name data with columns for year, name, gender, and number of births
-- `regions`: Maps names to U.S. regions for demographic analysis
+- `names`: Contains baby name, gender, state, year, and number of births
+- `regions`: Maps U.S. states to their respective regions
 
-## 🔍 Key Analyses
-1. **Most Popular Names by Gender (All Time & Yearly)**
-   - E.g., `Jessica` and `Michael` identified as top names in their respective genders.
-   - Used `SUM(births)` with `GROUP BY` and sorting to determine popularity.
+---
 
-2. **Trend Tracking Over Time**
-   - Uses `ROW_NUMBER()` over partitioned years to show rank progression of a name.
-   - Focused trend analysis on names like "Michael", "Jessica", and others.
+## 🎯 Analysis Objectives
 
-3. **Regional Naming Preferences**
-   - Compared name popularity across different U.S. regions using `JOIN` with `regions` table.
-   - Identified how regional cultures affect naming conventions.
+### 1️⃣ Track Changes in Name Popularity Over Time
+- Identify the all-time most popular boy (`Michael`) and girl (`Jessica`) names
+- Track how their **popularity rank changed year over year**
+- Calculate **names with the biggest ranking jumps** from 1980 to 2009
 
-4. **Rising and Falling Names**
-   - Detected names with the highest positive/negative changes in ranking between decades.
+### 2️⃣ Compare Popularity Across Time Periods
+- Retrieve the **top 3 names per gender for each year**
+- Repeat the same analysis **per decade** using `FLOOR(year/10) * 10`
 
-5. **Unisex Name Detection**
-   - Detected names used for both genders and calculated their usage proportion.
+### 3️⃣ Compare Popularity Across Regions
+- Clean and fix missing region mappings (e.g., Michigan → Midwest)
+- Count **total births per U.S. region**
+- Retrieve **top 3 girl and boy names** per region using `ROW_NUMBER()`
 
-## 📈 Sample Insights
-- The name *Michael* consistently ranked in the top 3 for male names between 1970–2000.
-- Unisex names like *Jordan* and *Taylor* gained popularity in the 90s across both genders.
-- Regional preferences showed that names like *Emily* were more common in the Northeast.
+### 4️⃣ Explore Unique and Extreme Names
+- Identify the **top 10 androgynous names** (used by both genders)
+- Find the **shortest and longest names**, then rank the most popular within each
+- Calculate the **state with the highest percentage of babies named "Chris"**
 
-## 📚 What I Learned
-- How to use advanced SQL functions (e.g., window functions, CTEs) for trend analysis
-- Structuring complex queries using subqueries and temporary result sets
-- Gained insights into gender and cultural patterns through data storytelling
+---
+
+## 🛠 SQL Techniques Used
+
+- **Aggregation**: `SUM()`, `COUNT()`
+- **Date functions**: `FLOOR()`, `YEAR()`
+- **Window functions**: `ROW_NUMBER()`, `RANK()`
+- **String functions**: `LENGTH()`, `GROUP_CONCAT()`
+- **Conditional logic**: `CASE WHEN`
+- **Common Table Expressions (CTEs)** for modular queries
+- **JOINs** and `UNION` for dataset enrichment and regional mapping
+
+---
+
+## 📂 File Included
+- `Baby_Names_Analysis.sql` – Complete SQL script organized by objective with clear comments and task labeling
+
+---
+
+## 📚 What This Project Demonstrates
+- Proficiency in SQL for demographic and behavioral data analysis
+- Ability to clean, transform, and enrich raw data using SQL logic
+- Strong use of window functions and modular querying for multi-level insights
+- Real-world application of SQL in social and cultural trend analysis
+
+---
+
+> 🎯 Ideal for data analysts and SQL learners exploring longitudinal, demographic, or geographic data storytelling.
