@@ -6,18 +6,18 @@ SELECT * FROM regions;
 -- How the most popular names have changed over time, and also to identify the names that have jumped the most in terms of popularity 
 -- Task 1: Find the overall most popular girl and boy names and show how they have changed in popularity ranking over the years
 SELECT
-	Name,
+    Name,
     SUM(births) AS num_babies
 FROM
-	names
+     names
 WHERE Gender = "F"
 GROUP BY Name
 ORDER BY num_babies DESC
 LIMIT 1; -- Jessica 
 
 SELECT 
-	Year,
-	Name,
+    Year,
+    Name,
     SUM(births) AS num_babies
 FROM
 	names
@@ -28,7 +28,7 @@ ORDER BY num_babies DESC;
  
  WITH boy_names_ranking AS (
  SELECT
-	Year,
+    Year,
     Name,
     SUM(births) AS num_babies,
     ROW_NUMBER() OVER(PARTITION BY Year ORDER BY SUM(births) DESC) AS popularity
@@ -38,7 +38,7 @@ WHERE Gender = "M"
 GROUP BY Name, Year
 )
 SELECT
-	Year,
+    Year,
     Name,
     popularity
 FROM
@@ -47,7 +47,7 @@ WHERE Name = "Michael";
 
 WITH girl_names_ranking AS (
 SELECT
-	Year,
+    Year,
     Name,
     SUM(births) AS num_babies,
     ROW_NUMBER() OVER(PARTITION BY Year ORDER BY SUM(births) DESC) AS popularity
@@ -57,7 +57,7 @@ WHERE Gender = "F"
 GROUP BY Year, Name
 )
 SELECT
-	Year,
+    Year,
     Name,
     popularity
 FROM
@@ -67,7 +67,7 @@ WHERE Name = "Jessica";
 -- Task 2: Find the names with the biggest jumps in popularity from the first year of the dataset to the last year
 WITH name_1980 AS (
 SELECT
-	Year,
+    Year,
     Name,
     SUM(births) AS num_babies,
     ROW_NUMBER() OVER(ORDER BY SUM(births) DESC) AS popularity_1980
@@ -78,7 +78,7 @@ GROUP BY Year, Name
 ),
 name_2009 AS (
 SELECT
-	Year,
+    Year,
     Name,
     SUM(births) AS num_babies,
     ROW_NUMBER() OVER(ORDER BY SUM(births) DESC) AS popularity_2009
@@ -88,8 +88,8 @@ WHERE Year = 2009
 GROUP BY Year, Name
 )
 SELECT
-	name_1980.Year,
-	name_1980.Name,
+    name_1980.Year,
+    name_1980.Name,
     name_1980.num_babies,
     name_1980.popularity_1980,
     name_2009.Year,
@@ -109,7 +109,7 @@ ORDER BY diff DESC;
 -- Task 1: For each year, return the 3 most popular girl names and 3 most popular boy names 
 WITH name_ranking AS (
 SELECT
-	Year,
+   Year,
     Name,
     Gender,
     SUM(births) AS num_babies,
@@ -119,18 +119,18 @@ FROM
 GROUP BY Year, Name, Gender
 )
 SELECT
-	Year,
+    Year,
     Name,
     Gender,
     popularity
 FROM
-	name_ranking
+    name_ranking
 WHERE popularity <= 3;
 
 -- Task 2: For each decade, return the 3 most popular girl names and 3 most popular boy names 
 WITH name_ranking AS (
 SELECT
-	FLOOR(Year / 10) * 10 AS decade,
+    FLOOR(Year / 10) * 10 AS decade,
     Name,
     Gender,
     SUM(births) AS num_babies,
@@ -140,7 +140,7 @@ FROM
 GROUP BY decade, Name, Gender
 )
 SELECT
-	decade,
+    decade,
     Name,
     Gender,
     popularity
@@ -152,7 +152,7 @@ WHERE popularity <= 3;
 -- Find the number of babies born in each region, and also return the top 3 girl names and top 3 boy names within each region
 -- Task 1: Return the number of babies born in each of the six regions 
 SELECT DISTINCT 
-	n.state,
+    n.state,
     r.region
 FROM
 	names n
@@ -164,16 +164,16 @@ WITH cleaned_region AS (
 SELECT DISTINCT
 	state,
 	CASE 
-		WHEN region = 'New England' THEN 'New_England' ELSE region END AS region_updated
+	    WHEN region = 'New England' THEN 'New_England' ELSE region END AS region_updated
 FROM
 	regions
 UNION 
 SELECT
-	'MI' AS state,
+    'MI' AS state,
     'Midwest' AS region
 )
 SELECT
-	cr.region_updated,
+    cr.region_updated,
     SUM(births) AS num_babies 
 FROM
 	cleaned_region cr 
@@ -186,19 +186,19 @@ ORDER BY num_babies DESC;
 USE baby_names_db;
 WITH cleaned_region AS (
 SELECT
-	state,
+   state,
     CASE
-		WHEN region = 'New England' THEN 'New_England' ELSE region END AS region_updated
+	WHEN region = 'New England' THEN 'New_England' ELSE region END AS region_updated
 FROM
 	regions
 UNION 
 SELECT
-	'MI' AS state,
+    'MI' AS state,
     'Midwest' AS region
 ),
 rn AS (
 SELECT
-	region_updated,
+   region_updated,
     name,
     gender,
     SUM(births) AS num_babies,
@@ -222,7 +222,7 @@ WHERE popularity <= 3;
 -- Find the most popular androgynous names, the shortest and longest names, and the state with the highest percent of babies named "Chris"
 -- Task 1: Find the 10 most popular androgynous names (names given to both females and males) 
 SELECT
-	name,
+   name,
     SUM(births) AS num_babies,
     COUNT(DISTINCT Gender) AS both_gender_count
 FROM
@@ -235,7 +235,7 @@ LIMIT 10;
 -- Task 2: Find the length of the shortest and longest names, and identify the most popular short names (those with the fewest characters) 
 -- and long names (those with the most characters)
 SELECT
-	MIN(length(Name)) AS shortest,
+    MIN(length(Name)) AS shortest,
     MAX(length(Name)) AS longest
 FROM
 	names;
@@ -251,7 +251,7 @@ ORDER BY name_length, num_babies DESC;
 
 -- The most popular long names
 SELECT
-	Name,
+    Name,
     SUM(births) AS num_babies,
     LENGTH(name) AS name_length
 FROM
@@ -262,7 +262,7 @@ ORDER BY name_length DESC, num_babies DESC;
 -- Task 3: Find the state with highest percent of babies named "Chris"
 WITH chris_name AS (
 SELECT 
-	r.State,
+    r.State,
     Name,
     SUM(births) AS num_chris
 FROM
@@ -273,7 +273,7 @@ WHERE Name = "Chris"
 GROUP BY State, Name
 )
 SELECT
-	n.state,
+    n.state,
     ROUND(num_chris * 100.0 / SUM(births), 4) AS percentage
 FROM
 	names n
